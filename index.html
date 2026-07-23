@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tech Grad Readiness Checklist</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f0f1a;
+      color: #e8e8f0;
+      min-height: 100vh;
+      padding: 32px 16px 80px;
+    }
+
+    header {
+      max-width: 780px;
+      margin: 0 auto 12px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    header p { color: #9ca3af; font-size: 0.9rem; line-height: 1.5; }
+
+    .toolbar {
+      max-width: 780px;
+      margin: 16px auto 28px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .toolbar-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #1c1c2e;
+      border: 1px solid #2a2a40;
+      color: #9ca3af;
+      padding: 7px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .toolbar-btn:hover { background: #22223a; color: #e8e8f0; border-color: #4b5563; }
+    .toolbar-btn.primary { background: #2d1b69; border-color: #a78bfa; color: #a78bfa; }
+    .toolbar-btn.primary:hover { background: #3b2382; }
+    .toolbar-btn.success { background: #14532d; border-color: #34d399; color: #34d399; }
+    .toolbar-btn.success:hover { background: #166534; }
+
+    .progress-wrap {
+      max-width: 780px;
+      margin: 0 auto 28px;
+      background: #1c1c2e;
+      border-radius: 16px;
+      padding: 20px 24px;
+      border: 1px solid #2a2a40;
+    }
+
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .progress-top span:first-child {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #a78bfa;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    #progress-count { font-size: 0.9rem; color: #9ca3af; }
+
+    .progress-bar-bg {
+      background: #2a2a40;
+      border-radius: 999px;
+      height: 10px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #a78bfa, #60a5fa, #34d399);
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    .section {
+      max-width: 780px;
+      margin: 0 auto 24px;
+      background: #1c1c2e;
+      border-radius: 16px;
+      border: 1px solid #2a2a40;
+      overflow: hidden;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      border-bottom: 1px solid #2a2a40;
+      user-select: none;
+    }
+
+    .section-toggle {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .section-icon {
+      font-size: 1.2rem;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      flex-shrink: 0;
+      background: #2a2a40;
+    }
+
+    .section-title { flex: 1; }
+
+    .section-title-text {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #e8e8f0;
+      outline: none;
+      background: transparent;
+      border: none;
+      width: 100%;
+      font-family: inherit;
+    }
+
+    .section-title-text:focus {
+      background: #2a2a40;
+      border-radius: 4px;
+      padding: 2px 6px;
+    }
+
+    .section-subtitle {
+      font-size: 0.78rem;
+      color: #6b7280;
+      margin-top: 2px;
+      outline: none;
+    }
+
+    .section-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-count {
+      font-size: 0.75rem;
+      color: #6b7280;
+      background: #2a2a40;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .chevron {
+      color: #4b5563;
+      font-size: 0.9rem;
+      transition: transform 0.3s;
+      cursor: pointer;
+    }
+
+    .section.collapsed .chevron { transform: rotate(-90deg); }
+    .section.collapsed .section-body { display: none; }
+
+    .delete-section-btn {
+      background: none;
+      border: none;
+      color: #374151;
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 4px;
+      border-radius: 4px;
+      transition: color 0.2s;
+      line-height: 1;
+    }
+
+    .delete-section-btn:hover { color: #ef4444; }
+
+    .section-body { padding: 4px 0 8px; }
+
+    .item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 20px;
+      transition: background 0.15s;
+      position: relative;
+    }
+
+    .item:hover { background: #22223a; }
+    .item:hover .item-actions { opacity: 1; }
+
+    .item.done { opacity: 0.45; }
+    .item.done .item-label { text-decoration: line-through; color: #6b7280; }
+
+    .checkbox {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #4b5563;
+      border-radius: 6px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .item.done .checkbox { background: #a78bfa; border-color: #a78bfa; }
+
+    .checkbox::after {
+      content: '✓';
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      display: none;
+    }
+
+    .item.done .checkbox::after { display: block; }
+
+    .item-content { flex: 1; min-width: 0; }
+
+    .item-label {
+      font-size: 0.88rem;
+      color: #d1d5db;
+      line-height: 1.4;
+      font-weight: 500;
+      outline: none;
+      word-break: break-word;
+    }
+
+    .item-label:focus, .item-note:focus {
+      background: #2a2a40;
+      border-radius: 4px;
+      padding: 2px 6px;
+      margin-left: -6px;
+    }
+
+    .item-note {
+      font-size: 0.76rem;
+      color: #6b7280;
+      margin-top: 3px;
+      line-height: 1.4;
+      outline: none;
+    }
+
+    .item-right {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .badge {
+      font-size: 0.65rem;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .badge-urgent { background: #450a0a; color: #fca5a5; }
+    .badge-high   { background: #431407; color: #fdba74; }
+    .badge-medium { background: #1e3a5f; color: #93c5fd; }
+    .badge-low    { background: #14532d; color: #86efac; }
+    .badge-none   { background: #1f2937; color: #6b7280; }
+
+    .item-actions {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .action-btn {
+      background: none;
+      border: none;
+      color: #4b5563;
+      cursor: pointer;
+      font-size: 0.85rem;
+      padding: 3px 5px;
+      border-radius: 4px;
+      transition: color 0.2s, background 0.2s;
+      line-height: 1;
+    }
+
+    .action-btn:hover { background: #374151; color: #e8e8f0; }
+    .action-btn.delete:hover { background: #450a0a; color: #fca5a5; }
+
+    .add-item-row {
+      display: flex;
+      padding: 6px 20px 4px;
+    }
+
+    .add-item-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      border: 1px dashed #2a2a40;
+      color: #4b5563;
+      padding: 7px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-family: inherit;
+      width: 100%;
+      transition: all 0.2s;
+    }
+
+    .add-item-btn:hover { border-color: #a78bfa; color: #a78bfa; background: #1a1030; }
+
+    .add-section-wrap {
+      max-width: 780px;
+      margin: 0 auto 32px;
+    }
+
+    .add-section-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: none;
+      border: 1px dashed #2a2a40;
+      color: #4b5563;
+      padding: 14px;
+      border-radius: 16px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-family: inherit;
+      width: 100%;
+      transition: all 0.2s;
+    }
+
+    .add-section-btn:hover { border-color: #60a5fa; color: #60a5fa; background: #0a1628; }
+
+    /* Badge picker tooltip */
+    .badge-picker {
+      position: absolute;
+      right: 20px;
+      top: 36px;
+      background: #1c1c2e;
+      border: 1px solid #2a2a40;
+      border-radius: 10px;
+      padding: 8px;
+      display: flex;
+      gap: 6px;
+      z-index: 10;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    .badge-option {
+      font-size: 0.65rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-weight: 600;
+      text-transform: uppercase;
+      cursor: pointer;
+      border: none;
+      letter-spacing: 0.04em;
+      transition: opacity 0.15s;
+    }
+
+    .badge-option:hover { opacity: 0.8; }
+
+    footer {
+      max-width: 780px;
+      margin: 0 auto;
+      text-align: center;
+      color: #374151;
+      font-size: 0.78rem;
+      padding-top: 16px;
+    }
+
+    footer a { color: #4b5563; text-decoration: none; }
+    footer a:hover { color: #a78bfa; }
+
+    .hint {
+      max-width: 780px;
+      margin: 0 auto 20px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #374151;
+    }
+
+    @media (max-width: 500px) {
+      header h1 { font-size: 1.5rem; }
+      .item { padding: 10px 14px; }
+      .section-header { padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🎓 Tech Grad Readiness Checklist</h1>
+  <p>For AI & Machine Learning graduates entering the job market.<br>
+  Customize it to fit your situation — then check things off as you go.</p>
+</header>
+
+<div class="toolbar">
+  <button class="toolbar-btn primary" onclick="addSection()">＋ Add Section</button>
+  <button class="toolbar-btn success" onclick="exportHTML()">↓ Export My Version</button>
+  <button class="toolbar-btn" onclick="resetChecks()">↺ Reset Progress</button>
+  <button class="toolbar-btn" onclick="clearAll()">⚠ Clear All &amp; Start Fresh</button>
+</div>
+
+<div class="hint">Double-click any text to edit it &nbsp;·&nbsp; Click a badge to change it &nbsp;·&nbsp; Hover an item to delete it</div>
+
+<div class="progress-wrap">
+  <div class="progress-top">
+    <span>Overall Progress</span>
+    <span id="progress-count">0 / 0 completed</span>
+  </div>
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="progress-bar"></div>
+  </div>
+</div>
+
+<div id="sections-container"></div>
+
+<div class="add-section-wrap">
+  <button class="add-section-btn" onclick="addSection()">＋ Add a custom section</button>
+</div>
+
+<footer>
+  <p>Built by <a href="https://ashleyfernander.com" target="_blank">Ashley Fernander</a> · Open source on <a href="https://github.com/AnnaBerrieJ" target="_blank">GitHub</a></p>
+</footer>
+
+<script>
+// ─── Default data ────────────────────────────────────────────────────────────
+
+const DEFAULT_SECTIONS = [
+  {
+    id: 'linkedin', icon: '💼', title: 'LinkedIn Profile', subtitle: 'Fix, fill, and make it recruiter-ready',
+    items: [
+      { label: 'Clean up job description formatting', note: 'Remove any contact info, internal notes, or unprofessional text left inside experience entries. Each bullet should describe your impact.', badge: 'urgent', done: false },
+      { label: 'Audit your Education section for accuracy', note: 'Fix any duplicate, incomplete, or incorrectly dated entries. Most recent and relevant credential should be listed first.', badge: 'urgent', done: false },
+      { label: 'Add your AI & Machine Learning post-grad credential', note: "This is your most relevant credential for the roles you're targeting. Add it now — even before you officially graduate.", badge: 'urgent', done: false },
+      { label: 'Write an About / Summary section', note: '3–5 sentences: who you are, what makes you different, and what you\'re targeting. Most-read section after your name.', badge: 'high', done: false },
+      { label: 'Update your headline to reflect your AI/ML focus', note: 'Example: "AI & Machine Learning Graduate | Front-End Developer | Python · ML · HTML/CSS/JS | Open to Work" — specific beats generic.', badge: 'high', done: false },
+      { label: 'Replace Top Skills with relevant tech skills', note: 'Prioritize: Python, Machine Learning, HTML/CSS/JavaScript, Git, Docker, SQL, Data Analysis.', badge: 'high', done: false },
+      { label: 'Add metrics to your experience bullet points', note: 'Even rough estimates matter. "Managed a website with 500+ products" is far stronger than vague descriptions.', badge: 'high', done: false },
+      { label: 'Add a Featured section with your portfolio & GitHub', note: 'Pin your personal site or top GitHub repo. Appears right under your headline.', badge: 'medium', done: false },
+      { label: 'Add a professional headshot', note: 'Profiles with photos get 21× more views. Clean background, professional attire, good lighting.', badge: 'medium', done: false },
+      { label: 'Turn on "Open to Work" (visible to recruiters)', note: 'Set target job titles and preferred locations, including Remote.', badge: 'medium', done: false },
+      { label: 'Add a Languages section', note: 'If you speak more than one language, list them. Multilingual candidates stand out in diverse tech markets.', badge: 'low', done: false },
+      { label: 'Request at least 2 recommendations', note: 'Ask a professor, classmate, or former supervisor. Even one genuine recommendation adds significant credibility.', badge: 'low', done: false },
+    ]
+  },
+  {
+    id: 'github', icon: '🐙', title: 'GitHub', subtitle: 'Your live coding portfolio — make it count',
+    items: [
+      { label: 'Set up a clean, professional GitHub profile', note: 'Professional username, profile photo, short bio, your location, and a link to your portfolio.', badge: 'urgent', done: false },
+      { label: 'Write a GitHub profile README', note: 'Create a repo with the same name as your username — add a README.md that shows on your profile. Include background, stack, projects, and contact links.', badge: 'high', done: false },
+      { label: 'Pin your 4–6 best repositories', note: 'Each pinned repo needs a clear name, description, and a README explaining what it does, the tech stack, and how to run it.', badge: 'high', done: false },
+      { label: 'Keep your commit graph active', note: 'Commit something every few days — docs, bug fixes, small features. A green contribution graph signals continuous learning.', badge: 'medium', done: false },
+      { label: 'Add topics/tags to each repository', note: 'Tag repos with "machine-learning", "python", "fastapi", etc. Makes your work discoverable.', badge: 'low', done: false },
+    ]
+  },
+  {
+    id: 'portfolio', icon: '🤖', title: 'Portfolio Projects (AI/ML Focus)', subtitle: 'Build things that prove your skills — aim for 3–4',
+    items: [
+      { label: 'Build a personal AI chatbot or Q&A assistant', note: 'Use OpenAI API or HuggingFace + LangChain. Shows LLM integration skills — highly in demand.', badge: 'high', done: false },
+      { label: 'End-to-end ML project with a deployed web interface', note: 'Train a model, wrap it in a FastAPI backend, deploy on Render or Hugging Face Spaces. Shows the full pipeline.', badge: 'high', done: false },
+      { label: 'Data analysis & visualization dashboard', note: 'Public dataset + EDA with pandas/matplotlib + interactive Streamlit or Plotly dashboard. Tell a data story.', badge: 'high', done: false },
+      { label: 'Personal portfolio website (yourname.dev or .com)', note: 'A clean single-page site: who you are, your projects, skills, and a contact form. Build it yourself — it proves front-end ability.', badge: 'high', done: false },
+      { label: 'Computer vision or NLP mini-project', note: 'Examples: image classifier, sentiment analyzer, fake news detector. Pick something you\'re curious about.', badge: 'medium', done: false },
+      { label: 'Rebuild or redesign a real website as a portfolio piece', note: 'Take an existing site and rebuild it with modern skills. Document the before/after. Bridges business context with technical execution.', badge: 'medium', done: false },
+      { label: 'Contribute to an open-source ML or AI project', note: 'Even fixing docs or writing tests counts. Shows collaboration and initiative.', badge: 'low', done: false },
+    ]
+  },
+  {
+    id: 'resume', icon: '📄', title: 'Resume', subtitle: 'ATS-ready, tailored, and results-focused',
+    items: [
+      { label: 'Create a clean, ATS-friendly resume (1–2 pages)', note: 'Avoid tables, columns, and graphics — many ATS systems can\'t parse them. Simple formatting beats flashy design.', badge: 'urgent', done: false },
+      { label: 'Add a technical skills section', note: 'Group by category: Languages (Python, JS), Frameworks (TensorFlow, scikit-learn, React), Tools (Git, Docker, Jupyter), Cloud basics.', badge: 'high', done: false },
+      { label: 'Tailor your resume for each application with job keywords', note: "Mirror the exact language from job postings. ATS filters resumes before a human ever sees them.", badge: 'high', done: false },
+      { label: 'Quantify every bullet point possible', note: '"Did [X] using [Y] which resulted in [Z]." Numbers stand out and show real-world impact.', badge: 'high', done: false },
+      { label: 'Add a Projects section to your resume', note: 'List 2–3 best projects with a one-line description and a GitHub/live link. Especially important when experience is limited.', badge: 'medium', done: false },
+      { label: "Have your resume reviewed by your school's Career Services", note: 'Free resource for most students. They know what local employers expect.', badge: 'medium', done: false },
+    ]
+  },
+  {
+    id: 'certs', icon: '🏅', title: 'Certifications', subtitle: 'Free and paid credentials that signal real skills',
+    items: [
+      { label: 'DeepLearning.AI — Machine Learning Specialization (Coursera)', note: "Andrew Ng's course is the gold standard for ML fundamentals. Globally recognized. ~3 months at your own pace. Free to audit.", badge: 'high', done: false },
+      { label: 'AWS / Google Cloud / Azure AI Fundamentals', note: 'Cloud AI certs are in high demand. Even entry-level ones (Azure AI-900, Google ACE) make your resume stand out.', badge: 'high', done: false },
+      { label: 'TensorFlow Developer Certificate (Google)', note: 'Practical, hands-on ML cert. Employer-recognized and demonstrates real implementation skills beyond theory.', badge: 'medium', done: false },
+      { label: 'Meta Front-End Developer Professional Certificate (Coursera)', note: 'Formalizes HTML/CSS/JS skills. Includes React, which is widely expected for front-end roles.', badge: 'medium', done: false },
+      { label: 'Kaggle micro-courses (free)', note: 'Python, Pandas, ML, Data Viz, SQL — each issues a free cert you can add to LinkedIn in minutes.', badge: 'low', done: false },
+    ]
+  },
+  {
+    id: 'network', icon: '🤝', title: 'Networking', subtitle: 'Most jobs are filled before they\'re posted',
+    items: [
+      { label: 'Connect with every classmate and professor on LinkedIn', note: 'Your cohort is your first professional network. They\'ll refer you, tag you in opportunities, and vouch for your skills.', badge: 'high', done: false },
+      { label: 'Attend at least 2 local or virtual tech / AI meetups', note: 'Look on Meetup.com and Eventbrite for AI/ML meetups, Women in Tech events, and school networking nights.', badge: 'high', done: false },
+      { label: 'Reach out to 1 person per week for a virtual coffee chat', note: 'Find alumni working at companies you admire. A short, genuine message asking for 15 minutes of advice has a high reply rate.', badge: 'medium', done: false },
+      { label: 'Engage on LinkedIn 3× per week', note: 'Comment on AI/ML posts, share articles with your own take. Visibility builds your reputation before you apply.', badge: 'medium', done: false },
+      { label: 'Join AI/ML communities online', note: 'Reddit: r/MachineLearning, r/learnmachinelearning. Discord: Hugging Face, ML Engineers. Real advice and job postings.', badge: 'low', done: false },
+    ]
+  },
+  {
+    id: 'skills', icon: '🧠', title: 'Technical Skills to Have Before Graduating', subtitle: 'Core competencies employers expect from AI/ML grads',
+    items: [
+      { label: 'Python — comfortable with pandas, NumPy, matplotlib', note: 'The language of ML. If not fluent yet, make this your #1 priority. Practice daily on Kaggle datasets.', badge: 'urgent', done: false },
+      { label: 'scikit-learn — classical ML models', note: 'Can you train, evaluate, and tune a classifier or regressor? Know cross-validation, confusion matrices, and feature engineering.', badge: 'urgent', done: false },
+      { label: 'TensorFlow or PyTorch — deep learning basics', note: 'Build, train, and evaluate a neural network. Fundamentals are enough to start — you don\'t need to be an expert.', badge: 'high', done: false },
+      { label: 'SQL — query databases confidently', note: 'Almost every data/AI role requires SQL. Know SELECT, JOIN, GROUP BY, subqueries, and window functions.', badge: 'high', done: false },
+      { label: 'Git — branching, PRs, and collaborative workflows', note: 'Feature branches, pull requests, code reviews — these should be second nature.', badge: 'high', done: false },
+      { label: 'API integration — calling and building REST APIs', note: 'Call external APIs (OpenAI, HuggingFace) and build simple ones with Flask or FastAPI.', badge: 'medium', done: false },
+      { label: 'Basic cloud deployment (AWS / GCP / Azure)', note: 'Deploy a simple app or model to the cloud. Render or Hugging Face Spaces counts for entry-level roles.', badge: 'medium', done: false },
+      { label: 'Prompt engineering & LLM basics', note: 'Prompt chaining, RAG, embeddings — increasingly expected even in non-ML roles.', badge: 'medium', done: false },
+    ]
+  },
+  {
+    id: 'jobsearch', icon: '🚀', title: 'Job Search Readiness', subtitle: 'Apply smart, follow up, and prepare to interview',
+    items: [
+      { label: 'Confirm your post-graduation work authorization', note: 'If you\'re an international student, research your work permit options now. Apply as early as you\'re eligible.', badge: 'urgent', done: false },
+      { label: 'Set up job alerts on LinkedIn, Indeed, and Glassdoor', note: '"ML Engineer," "AI Developer," "Data Analyst," "Junior Machine Learning," "Front-End Developer AI." Include Remote.', badge: 'high', done: false },
+      { label: 'Prepare your "Tell me about yourself" answer', note: '90-second version: background, what you studied, one experience highlight, why you\'re excited about this type of role.', badge: 'high', done: false },
+      { label: 'Practice 5 behavioral interview questions (STAR format)', note: 'Situation, Task, Action, Result. Common ones: challenge you overcame, working in a team, handling feedback.', badge: 'high', done: false },
+      { label: 'Practice technical interview questions for your target roles', note: 'ML: bias vs. variance, overfitting, model evaluation. Front-end: CSS specificity, async JS. Use LeetCode (Easy/Medium) and StrataScratch.', badge: 'high', done: false },
+      { label: 'Write a master cover letter template', note: 'One strong customizable template. Focus on: why this role, what you bring, one thing specific to their company.', badge: 'medium', done: false },
+      { label: 'Track all applications in a spreadsheet', note: 'Columns: Company, Role, Date Applied, Status, Follow-Up Date, Notes. Prevents missed follow-ups.', badge: 'medium', done: false },
+      { label: "Use your school's job portal and attend career fairs", note: 'Employers specifically recruit at campus fairs and some have exclusive relationships with your school.', badge: 'medium', done: false },
+      { label: 'Apply to internships, co-ops, and junior roles — not just full-time', note: 'Contract and part-time roles convert to full-time often. Don\'t wait for the perfect posting.', badge: 'low', done: false },
+    ]
+  }
+];
+
+const BADGE_CYCLE = ['urgent','high','medium','low','none'];
+const BADGE_LABELS = { urgent:'Urgent', high:'High', medium:'Medium', low:'Low', none:'—' };
+
+// ─── State ───────────────────────────────────────────────────────────────────
+
+let state = { sections: [] };
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('grad_checklist_v2');
+    if (saved) { state = JSON.parse(saved); return; }
+  } catch(e) {}
+  state = { sections: JSON.parse(JSON.stringify(DEFAULT_SECTIONS)) };
+}
+
+function saveState() {
+  // Sync DOM back to state before saving
+  document.querySelectorAll('.section[data-sid]').forEach(secEl => {
+    const sid = secEl.dataset.sid;
+    const sec = state.sections.find(s => s.id === sid);
+    if (!sec) return;
+    sec.title    = secEl.querySelector('.section-title-text').textContent.trim();
+    sec.subtitle = secEl.querySelector('.section-subtitle').textContent.trim();
+    secEl.querySelectorAll('.item[data-iid]').forEach(itemEl => {
+      const iid = parseInt(itemEl.dataset.iid);
+      const item = sec.items[iid];
+      if (!item) return;
+      item.label = itemEl.querySelector('.item-label').textContent.trim();
+      item.note  = itemEl.querySelector('.item-note').textContent.trim();
+      item.done  = itemEl.classList.contains('done');
+      item.badge = itemEl.dataset.badge;
+    });
+  });
+  try { localStorage.setItem('grad_checklist_v2', JSON.stringify(state)); } catch(e) {}
+}
+
+// ─── Render ──────────────────────────────────────────────────────────────────
+
+function render() {
+  const container = document.getElementById('sections-container');
+  container.innerHTML = '';
+  state.sections.forEach(sec => container.appendChild(renderSection(sec)));
+  updateProgress();
+}
+
+function renderSection(sec) {
+  const div = document.createElement('div');
+  div.className = 'section';
+  div.dataset.sid = sec.id;
+
+  div.innerHTML = `
+    <div class="section-header">
+      <div class="section-toggle" onclick="toggleSection('${sec.id}')">
+        <div class="section-icon">${sec.icon || '📋'}</div>
+        <div class="section-title">
+          <div class="section-title-text" contenteditable="true" spellcheck="false"
+               onclick="event.stopPropagation()"
+               oninput="saveState()">${esc(sec.title)}</div>
+          <div class="section-subtitle" contenteditable="true" spellcheck="false"
+               onclick="event.stopPropagation()"
+               oninput="saveState()">${esc(sec.subtitle)}</div>
+        </div>
+      </div>
+      <div class="section-meta">
+        <span class="section-count" id="count-${sec.id}">0/0</span>
+        <span class="chevron" onclick="toggleSection('${sec.id}')">▾</span>
+        <button class="delete-section-btn" title="Delete section"
+                onclick="deleteSection('${sec.id}')">✕</button>
+      </div>
+    </div>
+    <div class="section-body" id="body-${sec.id}">
+      ${sec.items.map((item, i) => renderItemHTML(sec.id, item, i)).join('')}
+      <div class="add-item-row">
+        <button class="add-item-btn" onclick="addItem('${sec.id}')">＋ Add item</button>
+      </div>
+    </div>
+  `;
+  return div;
+}
+
+function renderItemHTML(sid, item, idx) {
+  const badgeClass = `badge-${item.badge || 'none'}`;
+  const badgeLabel = BADGE_LABELS[item.badge] || '—';
+  return `
+    <div class="item ${item.done ? 'done' : ''}" data-sid="${sid}" data-iid="${idx}" data-badge="${item.badge || 'none'}">
+      <div class="checkbox" onclick="toggleItem(this.parentElement)"></div>
+      <div class="item-content">
+        <div class="item-label" contenteditable="true" spellcheck="false"
+             onclick="event.stopPropagation()" oninput="saveState()">${esc(item.label)}</div>
+        <div class="item-note" contenteditable="true" spellcheck="false"
+             onclick="event.stopPropagation()" oninput="saveState()">${esc(item.note)}</div>
+      </div>
+      <div class="item-right">
+        <span class="badge ${badgeClass}" onclick="cycleBadge(this.closest('.item'))"
+              title="Click to change priority">${badgeLabel}</span>
+        <div class="item-actions">
+          <button class="action-btn delete" title="Delete item"
+                  onclick="deleteItem(this.closest('.item'))">✕</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function esc(str) {
+  return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ─── Actions ─────────────────────────────────────────────────────────────────
+
+function toggleSection(sid) {
+  const sec = document.querySelector(`.section[data-sid="${sid}"]`);
+  if (sec) sec.classList.toggle('collapsed');
+}
+
+function toggleItem(itemEl) {
+  itemEl.classList.toggle('done');
+  updateProgress();
+  saveState();
+}
+
+function cycleBadge(itemEl) {
+  const current = itemEl.dataset.badge || 'none';
+  const next = BADGE_CYCLE[(BADGE_CYCLE.indexOf(current) + 1) % BADGE_CYCLE.length];
+  itemEl.dataset.badge = next;
+  const badge = itemEl.querySelector('.badge');
+  badge.className = `badge badge-${next}`;
+  badge.textContent = BADGE_LABELS[next];
+  saveState();
+}
+
+function deleteItem(itemEl) {
+  const sid = itemEl.dataset.sid;
+  const iid = parseInt(itemEl.dataset.iid);
+  const sec = state.sections.find(s => s.id === sid);
+  if (!sec) return;
+  saveState(); // sync first
+  sec.items.splice(iid, 1);
+  saveState();
+  render();
+}
+
+function addItem(sid) {
+  saveState();
+  const sec = state.sections.find(s => s.id === sid);
+  if (!sec) return;
+  sec.items.push({ label: 'New item — double-click to edit', note: 'Add a description here', badge: 'medium', done: false });
+  saveState();
+  render();
+  // Focus the new item label
+  const body = document.getElementById('body-' + sid);
+  if (body) {
+    const items = body.querySelectorAll('.item');
+    const last = items[items.length - 1];
+    if (last) {
+      const label = last.querySelector('.item-label');
+      if (label) { label.focus(); selectAll(label); }
+    }
+  }
+}
+
+function deleteSection(sid) {
+  if (!confirm('Delete this section and all its items?')) return;
+  saveState();
+  state.sections = state.sections.filter(s => s.id !== sid);
+  saveState();
+  render();
+}
+
+function addSection() {
+  saveState();
+  const id = 'custom_' + Date.now();
+  state.sections.push({
+    id, icon: '📋',
+    title: 'New Section — click to rename',
+    subtitle: 'Add a description',
+    items: [{ label: 'New item — double-click to edit', note: 'Add a description here', badge: 'medium', done: false }]
+  });
+  saveState();
+  render();
+  // Scroll to new section and focus title
+  setTimeout(() => {
+    const secEl = document.querySelector(`.section[data-sid="${id}"]`);
+    if (secEl) {
+      secEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const title = secEl.querySelector('.section-title-text');
+      if (title) { title.focus(); selectAll(title); }
+    }
+  }, 100);
+}
+
+function selectAll(el) {
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
+function resetChecks() {
+  if (!confirm('Reset all checkboxes? Your edits and custom items will be kept.')) return;
+  saveState();
+  state.sections.forEach(sec => sec.items.forEach(item => item.done = false));
+  saveState();
+  render();
+}
+
+function clearAll() {
+  if (!confirm('This will reset everything back to the default checklist. Are you sure?')) return;
+  state = { sections: JSON.parse(JSON.stringify(DEFAULT_SECTIONS)) };
+  saveState();
+  render();
+}
+
+// ─── Progress ────────────────────────────────────────────────────────────────
+
+function updateProgress() {
+  let total = 0, done = 0;
+  state.sections.forEach(sec => {
+    const secEl = document.querySelector(`.section[data-sid="${sec.id}"]`);
+    if (!secEl) return;
+    const items = secEl.querySelectorAll('.item');
+    const doneItems = secEl.querySelectorAll('.item.done');
+    const countEl = document.getElementById('count-' + sec.id);
+    if (countEl) countEl.textContent = doneItems.length + '/' + items.length;
+    total += items.length;
+    done += doneItems.length;
+  });
+  document.getElementById('progress-count').textContent = done + ' / ' + total + ' completed';
+  const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+}
+
+// ─── Export ──────────────────────────────────────────────────────────────────
+
+function exportHTML() {
+  saveState();
+  // Build a static snapshot of the current state
+  const sectionsHTML = state.sections.map(sec => {
+    const itemsHTML = sec.items.map(item => {
+      const badgeClass = `badge-${item.badge || 'none'}`;
+      const badgeLabel = BADGE_LABELS[item.badge] || '—';
+      return `
+      <div class="item ${item.done ? 'done' : ''}" data-badge="${item.badge || 'none'}">
+        <div class="checkbox"></div>
+        <div class="item-content">
+          <div class="item-label">${esc(item.label)}</div>
+          <div class="item-note">${esc(item.note)}</div>
+        </div>
+        <div class="item-right">
+          <span class="badge ${badgeClass}">${badgeLabel}</span>
+        </div>
+      </div>`;
+    }).join('');
+    return `
+  <div class="section" id="sec-${sec.id}">
+    <div class="section-header" onclick="toggleSection('sec-${sec.id}')">
+      <div class="section-icon">${sec.icon || '📋'}</div>
+      <div class="section-title">
+        <div class="section-title-text">${esc(sec.title)}</div>
+        <div class="section-subtitle">${esc(sec.subtitle)}</div>
+      </div>
+      <div class="section-meta">
+        <span class="section-count" id="count-${sec.id}">0/0</span>
+        <span class="chevron">▾</span>
+      </div>
+    </div>
+    <div class="section-body">${itemsHTML}</div>
+  </div>`;
+  }).join('');
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Tech Grad Readiness Checklist</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f0f1a;color:#e8e8f0;min-height:100vh;padding:32px 16px 60px}
+header{max-width:780px;margin:0 auto 28px;text-align:center}
+header h1{font-size:2rem;font-weight:700;background:linear-gradient(135deg,#a78bfa,#60a5fa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px}
+header p{color:#9ca3af;font-size:.9rem;line-height:1.5}
+.progress-wrap{max-width:780px;margin:0 auto 28px;background:#1c1c2e;border-radius:16px;padding:20px 24px;border:1px solid #2a2a40}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.progress-top span:first-child{font-weight:600;font-size:.9rem;color:#a78bfa;text-transform:uppercase;letter-spacing:.05em}
+#progress-count{font-size:.9rem;color:#9ca3af}
+.progress-bar-bg{background:#2a2a40;border-radius:999px;height:10px;overflow:hidden}
+.progress-bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#a78bfa,#60a5fa,#34d399);transition:width .4s ease;width:0%}
+.section{max-width:780px;margin:0 auto 24px;background:#1c1c2e;border-radius:16px;border:1px solid #2a2a40;overflow:hidden}
+.section-header{display:flex;align-items:center;gap:12px;padding:16px 20px;cursor:pointer;border-bottom:1px solid #2a2a40;user-select:none;transition:background .2s}
+.section-header:hover{background:#22223a}
+.section-icon{font-size:1.2rem;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:10px;flex-shrink:0;background:#2a2a40}
+.section-title{flex:1}
+.section-title-text{font-size:1rem;font-weight:600;color:#e8e8f0}
+.section-subtitle{font-size:.78rem;color:#6b7280;margin-top:2px}
+.section-meta{display:flex;align-items:center;gap:8px}
+.section-count{font-size:.75rem;color:#6b7280;background:#2a2a40;padding:2px 8px;border-radius:999px}
+.chevron{color:#4b5563;font-size:.9rem;transition:transform .3s}
+.section.collapsed .chevron{transform:rotate(-90deg)}
+.section.collapsed .section-body{display:none}
+.section-body{padding:4px 0 8px}
+.item{display:flex;align-items:flex-start;gap:12px;padding:10px 20px;cursor:pointer;transition:background .15s}
+.item:hover{background:#22223a}
+.item.done{opacity:.45}
+.item.done .item-label{text-decoration:line-through;color:#6b7280}
+.checkbox{width:20px;height:20px;border:2px solid #4b5563;border-radius:6px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .2s;background:transparent}
+.item.done .checkbox{background:#a78bfa;border-color:#a78bfa}
+.checkbox::after{content:'✓';color:#fff;font-size:12px;font-weight:700;display:none}
+.item.done .checkbox::after{display:block}
+.item-content{flex:1}
+.item-label{font-size:.88rem;color:#d1d5db;line-height:1.4;font-weight:500}
+.item-note{font-size:.76rem;color:#6b7280;margin-top:3px;line-height:1.4}
+.item-right{display:flex;flex-shrink:0;margin-top:2px}
+.badge{font-size:.65rem;padding:2px 7px;border-radius:999px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.badge-urgent{background:#450a0a;color:#fca5a5}
+.badge-high{background:#431407;color:#fdba74}
+.badge-medium{background:#1e3a5f;color:#93c5fd}
+.badge-low{background:#14532d;color:#86efac}
+.badge-none{background:#1f2937;color:#6b7280}
+footer{max-width:780px;margin:0 auto;text-align:center;color:#374151;font-size:.78rem;padding-top:16px}
+footer a{color:#4b5563;text-decoration:none}
+footer a:hover{color:#a78bfa}
+</style>
+</head>
+<body>
+<header>
+<h1>🎓 Tech Grad Readiness Checklist</h1>
+<p>For AI &amp; Machine Learning graduates entering the job market.</p>
+</header>
+<div class="progress-wrap">
+<div class="progress-top"><span>Overall Progress</span><span id="progress-count">0 / 0 completed</span></div>
+<div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-bar"></div></div>
+</div>
+${sectionsHTML}
+<footer><p>Built by <a href="https://ashleyfernander.com" target="_blank">Ashley Fernander</a> · <a href="https://github.com/ashleyfernander" target="_blank">GitHub</a></p></footer>
+<script>
+function toggleSection(id){const s=document.getElementById(id);if(s)s.classList.toggle('collapsed')}
+function toggle(el){el.classList.toggle('done');updateProgress();save()}
+document.querySelectorAll('.item').forEach(el=>el.addEventListener('click',function(){toggle(this)}))
+function updateProgress(){const secs=document.querySelectorAll('.section');let t=0,d=0;secs.forEach(s=>{const id=s.id.replace('sec-','');const items=s.querySelectorAll('.item');const done=s.querySelectorAll('.item.done');const c=document.getElementById('count-'+id);if(c)c.textContent=done.length+'/'+items.length;t+=items.length;d+=done.length});document.getElementById('progress-count').textContent=d+' / '+t+' completed';const pct=t===0?0:Math.round(d/t*100);document.getElementById('progress-bar').style.width=pct+'%'}
+function save(){try{const items=document.querySelectorAll('.item');const st=[];items.forEach((el,i)=>st.push(el.classList.contains('done')));localStorage.setItem('grad_checklist_export',JSON.stringify(st))}catch(e){}}
+function load(){try{const st=JSON.parse(localStorage.getItem('grad_checklist_export')||'[]');const items=document.querySelectorAll('.item');items.forEach((el,i)=>{if(st[i])el.classList.add('done')})}catch(e){}updateProgress()}
+load();
+<\/script>
+</body>
+</html>`;
+
+  const blob = new Blob([html], { type: 'text/html' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'my-grad-checklist.html';
+  a.click();
+}
+
+// ─── Init ────────────────────────────────────────────────────────────────────
+
+loadState();
+render();
+</script>
+</body>
+</html>
